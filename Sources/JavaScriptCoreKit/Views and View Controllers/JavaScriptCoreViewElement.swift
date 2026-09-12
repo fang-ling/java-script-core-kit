@@ -25,7 +25,7 @@ import FoundationKit
 ///
 /// ### Creating a View Element
 ///
-/// - ``init(kind:)``
+/// - ``init()``
 ///
 /// ### Accessing properties of a View Element
 ///
@@ -40,6 +40,10 @@ import FoundationKit
 /// - ``insertSubviewElement(_:at:)``
 /// - ``removeFromSuperviewElement()``
 public class JavaScriptCoreViewElement {
+  internal class var _viewElementKind: JavaScriptCoreViewElement._Kind {
+    return .division
+  }
+
   private var _id: CInteger
 
   /// A string containing the element's class name.
@@ -81,11 +85,9 @@ public class JavaScriptCoreViewElement {
   /// The parent view element of the view element.
   public weak var superviewElement: JavaScriptCoreViewElement?
 
-  /// Creates a new view element with specified kind.
-  ///
-  /// - Parameter kind: The kind of the new view element.
-  public init(kind: Kind) {
-    self._id = _JavaScriptCoreViewElementInitialize(with: kind.rawValue)
+  /// Creates a new view element.
+  public required init() {
+    self._id = _JavaScriptCoreViewElementInitialize(with: Swift::type(of: self)._viewElementKind.rawValue)
     self.style = Style()
   }
 
@@ -133,12 +135,6 @@ public class JavaScriptCoreViewElement {
     self.superviewElement = nil
 
     _JavaScriptCoreViewElementRemoveFromSuperviewElement(for: self._id)
-  }
-}
-
-extension JavaScriptCoreViewElement {
-  public enum Kind: CInteger {
-    case division = 1
   }
 }
 

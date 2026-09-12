@@ -12,3 +12,7 @@ environment.
 ### JavaScript Environment
 
 - ``JavaScriptCoreKit/JavaScriptCoreGlobalObject``
+
+### Views and View Controllers
+
+- ``JavaScriptCoreKit/JavaScriptCoreViewElement``

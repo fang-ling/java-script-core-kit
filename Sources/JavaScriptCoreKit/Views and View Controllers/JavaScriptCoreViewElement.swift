@@ -31,6 +31,7 @@ import FoundationKit
 ///
 /// - ``className``
 /// - ``style``
+/// - ``JavaScriptCoreViewElement/Style``
 ///
 /// ### Managing the View Element hierarchy
 ///
@@ -66,11 +67,14 @@ public class JavaScriptCoreViewElement {
       if let height = style.height {
         entries.append((.height, "\(height)px"))
       }
+      if let left = style.left {
+        entries.append((.left, "\(left)px"))
+      }
       if let top = style.top {
         entries.append((.top, "\(top)px"))
       }
-      if let left = style.left {
-        entries.append((.left, "\(left)px"))
+      if let visibility = style.visibility {
+        entries.append((.visibility, visibility))
       }
 
       for entry in entries {

@@ -76,6 +76,9 @@ public class JavaScriptCoreViewElement {
       if let visibility = style.visibility {
         entries.append((.visibility, visibility))
       }
+      if let borderRadius = style.borderRadius {
+        entries.append((.borderRadius, "\(borderRadius)px"))
+      }
 
       for entry in entries {
         _JavaScriptCoreViewElementSetStyle(for: self._id, entry.0.rawValue, entry.1.utf8.cString, entry.1.utf8.count)

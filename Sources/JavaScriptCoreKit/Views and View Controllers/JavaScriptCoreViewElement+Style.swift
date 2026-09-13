@@ -41,6 +41,10 @@ extension JavaScriptCoreViewElement {
   /// ### Configuring an Element's borders
   ///
   /// - ``borderRadius``
+  ///
+  /// ### Configuring Overflow Behavior of an Element
+  ///
+  /// - ``overflow``
   public struct Style {
     /// The width, in pixels, for an element.
     public var width: CFloatingPoint64?
@@ -59,6 +63,9 @@ extension JavaScriptCoreViewElement {
 
     /// The property rounds the corners of an element's outer border edge.
     public var borderRadius: CFloatingPoint64?
+
+    /// The property for controlling how an element handles content that is too large for the container.
+    public var overflow: FoundationString?
   }
 }
 
@@ -70,5 +77,6 @@ extension JavaScriptCoreViewElement.Style {
     case top = 4
     case visibility = 5
     case borderRadius = 6
+    case overflow = 7
   }
 }

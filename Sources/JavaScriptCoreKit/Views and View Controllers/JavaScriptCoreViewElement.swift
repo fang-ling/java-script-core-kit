@@ -79,6 +79,9 @@ public class JavaScriptCoreViewElement {
       if let borderRadius = style.borderRadius {
         entries.append((.borderRadius, "\(borderRadius)px"))
       }
+      if let overflow = style.overflow {
+        entries.append((.overflow, overflow))
+      }
 
       for entry in entries {
         _JavaScriptCoreViewElementSetStyle(for: self._id, entry.0.rawValue, entry.1.utf8.cString, entry.1.utf8.count)

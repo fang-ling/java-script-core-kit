@@ -25,10 +25,6 @@ function readString(string, count) {
   return String.fromCodePoint(...(new Uint32Array(_memory.buffer, string, Number(count))))
 }
 
-function readUTF8String(string, count) {
-  return textDecoder.decode(new Uint8Array(_memory.buffer, string, count))
-}
-
 function getNode(nodeID) {
   if (nodeID === 0) {
     return document.body
@@ -44,16 +40,6 @@ function getEventTypeName(type) {
   }
 }
 
-function JavaScriptCoreNodeInitialize(nodeType) {
-  nodeIndex += 1
-
-  const node = document.createElement(nodeType)
-  node.className = "view"
-  nodes.set(nodeIndex, node)
-
-  return nodeIndex
-}
-
 export function JavaScriptCoreInitialize(instance, memory) {
   _instance = instance
   _memory = memory
@@ -61,14 +47,6 @@ export function JavaScriptCoreInitialize(instance, memory) {
   nodeIndex = 0
   eventListeners = new Map()
   textDecoder = new TextDecoder("utf-8")
-}
-
-export function JavaScriptCoreWindowGetWidth() {
-  return window.innerWidth
-}
-
-export function JavaScriptCoreWindowGetHeight() {
-  return window.innerHeight
 }
 
 export function JavaScriptCoreMeasureTextSize(textBuffer, textBufferCount, styleTextBuffer, styleTextBufferCount, result) {
@@ -86,25 +64,6 @@ export function JavaScriptCoreMeasureTextSize(textBuffer, textBufferCount, style
   element.remove()
 }
 
-export function JavaScriptCoreNodeInitializeWithType(type) {
-  switch (type) {
-    case 0: return JavaScriptCoreNodeInitialize("button")
-    case 1: return JavaScriptCoreNodeInitialize("div")
-    case 2: return JavaScriptCoreNodeInitialize("img")
-    case 3: return JavaScriptCoreNodeInitialize("p")
-    case 4: return JavaScriptCoreNodeInitialize("span")
-  }
-}
-
-export function JavaScriptCoreNodeSetClassName(nodeID, classNameBuffer, classNameBufferCount) {
-  const node = getNode(nodeID)
-  if (!node) {
-    return
-  }
-
-  node.className = readString(classNameBuffer, classNameBufferCount)
-}
-
 export function JavaScriptCoreNodeSetSourceContent(nodeID, sourceContentBuffer, sourceContentBufferCount) {
   const node = getNode(nodeID)
   if (!node) {
@@ -112,13 +71,6 @@ export function JavaScriptCoreNodeSetSourceContent(nodeID, sourceContentBuffer, 
   }
 
   node.src = readString(sourceContentBuffer, sourceContentBufferCount)
-}
-
-export function JavaScriptCoreNodeSetStyleProperty(nodeID, propertyBuffer, propertyBufferCount, valueBuffer, valueBufferCount) {
-  getNode(nodeID)?.style.setProperty(
-    readString(propertyBuffer, propertyBufferCount),
-    readString(valueBuffer, valueBufferCount)
-  )
 }
 
 export function JavaScriptCoreNodeSetTextContent(nodeID, textContentBuffer, textContentBufferCount) {
@@ -166,20 +118,6 @@ export function JavaScriptCoreNodeAddSubnode(nodeID, subnodeID) {
   const subnode = getNode(subnodeID)
 
   node.appendChild(subnode)
-}
-
-export function JavaScriptCoreNodeInsertSubnodeAtIndex(nodeID, subnodeID, index) {
-  const node = getNode(nodeID)
-  const subnode = getNode(subnodeID)
-
-  node.insertBefore(subnode, node.childNodes[index])
-}
-
-export function JavaScriptCoreNodeRemoveFromSupernode(supernodeID, nodeID) {
-  const supernode = getNode(supernodeID)
-  const node = getNode(nodeID)
-
-  supernode.removeChild(node)
 }
 
 export function JavaScriptCoreGlobalObjectFetch(requestID, urlBuffer, urlBufferCount, requestBuffer, requestBufferCount) {

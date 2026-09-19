@@ -40,10 +40,18 @@ import FoundationKit
 /// - ``addSubviewElement(_:)``
 /// - ``insertSubviewElement(_:at:)``
 /// - ``removeFromSuperviewElement()``
+///
+/// ### Shared View Elements
+///
+/// - ``body``
+@MainActor
 public class JavaScriptCoreViewElement {
   internal class var _viewElementKind: JavaScriptCoreViewElement._Kind {
     return .division
   }
+
+  /// A view element represents the content of an HTML document.
+  public static let body = JavaScriptCoreViewElement(id: -1)
 
   private var _id: CInteger
 
@@ -98,6 +106,11 @@ public class JavaScriptCoreViewElement {
   /// Creates a new view element.
   public required init() {
     self._id = _JavaScriptCoreViewElementInitialize(with: Swift::type(of: self)._viewElementKind.rawValue)
+    self.style = Style()
+  }
+
+  private init(id: CInteger) {
+    self._id = id
     self.style = Style()
   }
 

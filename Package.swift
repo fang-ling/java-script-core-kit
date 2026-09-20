@@ -1,60 +1,44 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.3
 
+//===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===//
 //
 //  Package.swift
-//  javascript-core-kit
+//  java-script-core-kit
 //
 //  Created by Fang Ling on 2026/4/4.
 //
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
+//  This source file is part of the JavaScriptCoreKit open source project
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//  Copyright (c) 2026 Fang Ling <fangling@fangl.ing>
+//  Licensed under Apache License v2.0
 //
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
+//  See LICENSE for license information
 //
+//  SPDX-License-Identifier: Apache-2.0
+//
+//===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===//
 
 import PackageDescription
 
 let isDevelopment = false
 
 let dependencies = [
-  ("c-kit", "main"),
-  ("core-foundation-kit", "main"),
-  ("foundation-kit", "main"),
-  ("objective-c-kit", "main")
+  ("c-kit", "CKit", "main"),
+  ("foundation-kit", "FoundationKit", "main")
 ]
 
 let package = Package(
-  name: "javascript-core-kit",
+  name: "java-script-core-kit",
   products: [
     .library(name: "JavaScriptCoreKit", targets: ["JavaScriptCoreKit"])
   ],
-  dependencies: dependencies.map({
-    if isDevelopment {
-      return .package(path: "../\($0.0)")
-    } else {
-      return .package(url: "https://github.com/fang-ling/\($0.0)", branch: $0.1)
-    }
-  }),
+  dependencies: dependencies.map { isDevelopment ? .package(path: "../\($0.0)") : .package(url: "https://github.com/fang-ling/\($0.0)", branch: $0.2) },
   targets: [
     .target(
       name: "JavaScriptCoreKit",
-      dependencies: [
-        .product(name: "CKit", package: "c-kit"),
-        .product(name: "CoreFoundationKit", package: "core-foundation-kit"),
-        .product(name: "FoundationKit", package: "foundation-kit"),
-        .product(name: "ObjectiveCKit", package: "objective-c-kit")
-      ],
-      publicHeadersPath: "Includes",
-      cSettings: [
-        .unsafeFlags(["-fobjc-runtime=objfw-1.5"], .when(platforms: [.wasi])),
-        .unsafeFlags(["-fobjc-arc"])
+      dependencies: dependencies.map { .product(name: $0.1, package: $0.0) },
+      swiftSettings: [
+        .enableExperimentalFeature("Extern")
       ]
     )
   ]

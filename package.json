@@ -1,0 +1,17 @@
+{
+  "name": "@fangling/java-script-core-kit",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./.build/build/JavaScriptCoreKit/index.js"
+  },
+  "dependencies": {
+    "uwasi": "1.5.2"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

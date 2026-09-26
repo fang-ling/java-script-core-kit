@@ -52,6 +52,7 @@ export class JavaScriptCoreViewElement {
 
     this._element = document.createElement(type)
     this._element.className = "view"
+    this._element.setAttribute(JavaScriptCoreViewElement.AttributeName.id, `${this.id}`)
   }
 
   public setClassName(className: string) {
@@ -96,5 +97,9 @@ export namespace JavaScriptCoreViewElement {
     visibility = 5,
     borderRadius = 6,
     overflow = 7
+  }
+
+  export enum AttributeName {
+    id = "data-id"
   }
 }

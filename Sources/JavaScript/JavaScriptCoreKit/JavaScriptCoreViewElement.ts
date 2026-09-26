@@ -82,6 +82,14 @@ export class JavaScriptCoreViewElement {
   public removeFromSuperviewElement() {
     this._element.parentNode?.removeChild(this._element)
   }
+
+  public addEventListener<Type extends keyof HTMLElementEventMap>(type: Type, listener: (event: HTMLElementEventMap[Type]) => void, options?: AddEventListenerOptions) {
+    this._element.addEventListener(type, listener, options)
+  }
+
+  public removeEventListener<Type extends keyof HTMLElementEventMap>(type: Type, listener: (event: HTMLElementEventMap[Type]) => void, options?: EventListenerOptions) {
+    this._element.removeEventListener(type, listener, options)
+  }
 }
 
 export namespace JavaScriptCoreViewElement {

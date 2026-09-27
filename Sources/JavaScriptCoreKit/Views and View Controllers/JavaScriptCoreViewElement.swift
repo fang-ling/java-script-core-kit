@@ -29,6 +29,7 @@ import FoundationKit
 ///
 /// ### Accessing properties of a View Element
 ///
+/// - ``isKeyViewElement``
 /// - ``className``
 /// - ``style``
 /// - ``JavaScriptCoreViewElement/Style``
@@ -53,7 +54,16 @@ public class JavaScriptCoreViewElement {
   /// A view element represents the content of an HTML document.
   public static let body = JavaScriptCoreViewElement(id: -1)
 
-  private var _id: CInteger
+  public private(set) var _id: CInteger
+
+  /// A Boolean value that indicates whether the view element is the key view element.
+  ///
+  /// The key view element receives the pointer and scroll events that occur in any of its descendant view elements.
+  public var isKeyViewElement: CBoolean {
+    didSet {
+      _JavaScriptCoreViewElementSetIsKeyViewElement(for: self._id, self.isKeyViewElement)
+    }
+  }
 
   /// A string containing the element's class name.
   public var className: FoundationString? {
@@ -106,11 +116,13 @@ public class JavaScriptCoreViewElement {
   /// Creates a new view element.
   public required init() {
     self._id = _JavaScriptCoreViewElementInitialize(with: Swift::type(of: self)._viewElementKind.rawValue)
+    self.isKeyViewElement = false
     self.style = Style()
   }
 
   private init(id: CInteger) {
     self._id = id
+    self.isKeyViewElement = false
     self.style = Style()
   }
 
@@ -163,6 +175,9 @@ public class JavaScriptCoreViewElement {
 
 @_extern(wasm, module: "env", name: "_JavaScriptCoreViewElementInitializeWithKind")
 private func _JavaScriptCoreViewElementInitialize(with kind: CInteger) -> CInteger
+
+@_extern(wasm, module: "env", name: "_JavaScriptCoreViewElementSetIsKeyViewElement")
+private func _JavaScriptCoreViewElementSetIsKeyViewElement(for viewElementID: CInteger, _ isKeyViewElement: CBoolean)
 
 @_extern(wasm, module: "env", name: "_JavaScriptCoreViewElementSetClassName")
 private func _JavaScriptCoreViewElementSetClassName(for viewElementID: CInteger, _ buffer: CString, _ count: CInteger)

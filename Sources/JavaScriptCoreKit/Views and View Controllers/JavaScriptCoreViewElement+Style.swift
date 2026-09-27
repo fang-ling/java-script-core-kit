@@ -17,7 +17,7 @@
 //===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===//
 
 import CKit
-import FoundationKit
+import SwiftFramework
 
 extension JavaScriptCoreViewElement {
   /// A style applied to a view element.
@@ -59,13 +59,13 @@ extension JavaScriptCoreViewElement {
     public var top: CFloatingPoint64?
 
     /// The property shows or hides an element.
-    public var visibility: FoundationString?
+    public var visibility: SwiftString?
 
     /// The property rounds the corners of an element's outer border edge.
     public var borderRadius: CFloatingPoint64?
 
     /// The property for controlling how an element handles content that is too large for the container.
-    public var overflow: FoundationString?
+    public var overflow: SwiftString?
   }
 }
 

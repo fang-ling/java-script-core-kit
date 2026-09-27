@@ -108,7 +108,7 @@ public class JavaScriptCoreViewElement {
   }
 
   /// An array containing the child elements of the element currently being accessed.
-  public var subviewElements: FoundationArray<JavaScriptCoreViewElement>?
+  public var subviewElements: FoundationArray<JavaScriptCoreViewElement>
 
   /// The parent view element of the view element.
   public weak var superviewElement: JavaScriptCoreViewElement?
@@ -117,12 +117,14 @@ public class JavaScriptCoreViewElement {
   public required init() {
     self._id = _JavaScriptCoreViewElementInitialize(with: Swift::type(of: self)._viewElementKind.rawValue)
     self.isKeyViewElement = false
+    self.subviewElements = []
     self.style = Style()
   }
 
   private init(id: CInteger) {
     self._id = id
     self.isKeyViewElement = false
+    self.subviewElements = []
     self.style = Style()
   }
 
@@ -132,11 +134,7 @@ public class JavaScriptCoreViewElement {
   ///
   /// - Parameter viewElement: The view element to be added.
   public func addSubviewElement(_ viewElement: JavaScriptCoreViewElement) {
-    if self.subviewElements == nil {
-      self.subviewElements = []
-    }
-
-    self.insertSubviewElement(viewElement, at: self.subviewElements!.count)
+    self.insertSubviewElement(viewElement, at: self.subviewElements.count)
   }
 
   /// Inserts the specified view element into the view element's list of ``subviewElements`` at the specified index.
@@ -149,7 +147,7 @@ public class JavaScriptCoreViewElement {
       viewElement.removeFromSuperviewElement()
     }
 
-    self.subviewElements?.insert(viewElement, at: index)
+    self.subviewElements.insert(viewElement, at: index)
 
     viewElement.superviewElement = self
 
@@ -165,7 +163,7 @@ public class JavaScriptCoreViewElement {
       return
     }
 
-    self.superviewElement?.subviewElements?.removeAll(where: { $0 === self })
+    self.superviewElement?.subviewElements.removeAll(where: { $0 === self })
 
     self.superviewElement = nil
 

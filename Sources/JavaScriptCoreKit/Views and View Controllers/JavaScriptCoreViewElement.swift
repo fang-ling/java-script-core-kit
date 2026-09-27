@@ -17,7 +17,7 @@
 //===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===//
 
 import CKit
-import FoundationKit
+import SwiftFramework
 
 /// A representation of a DOM node.
 ///
@@ -29,6 +29,7 @@ import FoundationKit
 ///
 /// ### Accessing properties of a View Element
 ///
+/// - ``isKeyViewElement``
 /// - ``className``
 /// - ``style``
 /// - ``JavaScriptCoreViewElement/Style``
@@ -53,13 +54,22 @@ public class JavaScriptCoreViewElement {
   /// A view element represents the content of an HTML document.
   public static let body = JavaScriptCoreViewElement(id: -1)
 
-  private var _id: CInteger
+  public private(set) var _id: CInteger
+
+  /// A Boolean value that indicates whether the view element is the key view element.
+  ///
+  /// The key view element receives the pointer and scroll events that occur in any of its descendant view elements.
+  public var isKeyViewElement: CBoolean {
+    didSet {
+      _JavaScriptCoreViewElementSetIsKeyViewElement(for: self._id, self.isKeyViewElement)
+    }
+  }
 
   /// A string containing the element's class name.
-  public var className: FoundationString? {
+  public var className: SwiftString? {
     didSet {
       if let className {
-        _JavaScriptCoreViewElementSetClassName(for: self._id, className.utf8.cString, className.utf8.count)
+        _JavaScriptCoreViewElementSetClassName(for: self._id, className, className.utf8.count)
       }
     }
   }
@@ -67,7 +77,7 @@ public class JavaScriptCoreViewElement {
   /// The style applied to an element.
   public var style: Style {
     didSet {
-      var entries: FoundationArray<(Style._Property, FoundationString)> = []
+      var entries: SwiftArray<(Style._Property, SwiftString)> = []
 
       if let width = style.width {
         entries.append((.width, "\(width)px"))
@@ -92,13 +102,13 @@ public class JavaScriptCoreViewElement {
       }
 
       for entry in entries {
-        _JavaScriptCoreViewElementSetStyle(for: self._id, entry.0.rawValue, entry.1.utf8.cString, entry.1.utf8.count)
+        _JavaScriptCoreViewElementSetStyle(for: self._id, entry.0.rawValue, entry.1, entry.1.utf8.count)
       }
     }
   }
 
   /// An array containing the child elements of the element currently being accessed.
-  public var subviewElements: FoundationArray<JavaScriptCoreViewElement>?
+  public var subviewElements: SwiftArray<JavaScriptCoreViewElement>
 
   /// The parent view element of the view element.
   public weak var superviewElement: JavaScriptCoreViewElement?
@@ -106,11 +116,15 @@ public class JavaScriptCoreViewElement {
   /// Creates a new view element.
   public required init() {
     self._id = _JavaScriptCoreViewElementInitialize(with: Swift::type(of: self)._viewElementKind.rawValue)
+    self.isKeyViewElement = false
+    self.subviewElements = []
     self.style = Style()
   }
 
   private init(id: CInteger) {
     self._id = id
+    self.isKeyViewElement = false
+    self.subviewElements = []
     self.style = Style()
   }
 
@@ -120,11 +134,7 @@ public class JavaScriptCoreViewElement {
   ///
   /// - Parameter viewElement: The view element to be added.
   public func addSubviewElement(_ viewElement: JavaScriptCoreViewElement) {
-    if self.subviewElements == nil {
-      self.subviewElements = []
-    }
-
-    self.insertSubviewElement(viewElement, at: self.subviewElements!.count)
+    self.insertSubviewElement(viewElement, at: self.subviewElements.count)
   }
 
   /// Inserts the specified view element into the view element's list of ``subviewElements`` at the specified index.
@@ -137,7 +147,7 @@ public class JavaScriptCoreViewElement {
       viewElement.removeFromSuperviewElement()
     }
 
-    self.subviewElements?.insert(viewElement, at: index)
+    self.subviewElements.insert(viewElement, at: index)
 
     viewElement.superviewElement = self
 
@@ -153,7 +163,7 @@ public class JavaScriptCoreViewElement {
       return
     }
 
-    self.superviewElement?.subviewElements?.removeAll(where: { $0 === self })
+    self.superviewElement?.subviewElements.removeAll(where: { $0 === self })
 
     self.superviewElement = nil
 
@@ -163,6 +173,9 @@ public class JavaScriptCoreViewElement {
 
 @_extern(wasm, module: "env", name: "_JavaScriptCoreViewElementInitializeWithKind")
 private func _JavaScriptCoreViewElementInitialize(with kind: CInteger) -> CInteger
+
+@_extern(wasm, module: "env", name: "_JavaScriptCoreViewElementSetIsKeyViewElement")
+private func _JavaScriptCoreViewElementSetIsKeyViewElement(for viewElementID: CInteger, _ isKeyViewElement: CBoolean)
 
 @_extern(wasm, module: "env", name: "_JavaScriptCoreViewElementSetClassName")
 private func _JavaScriptCoreViewElementSetClassName(for viewElementID: CInteger, _ buffer: CString, _ count: CInteger)
